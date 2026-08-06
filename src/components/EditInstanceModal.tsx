@@ -11,6 +11,8 @@ interface Instance {
   node2Url: string | null;
   node1Role?: string | null;
   node2Role?: string | null;
+  node1Path?: string | null;
+  node2Path?: string | null;
   smpPath: string | null;
   trakcarePath: string | null;
   namespace: string | null;
@@ -30,6 +32,8 @@ export function EditInstanceModal({ instance, onClose, onSave }: EditInstanceMod
     node2Url: instance.node2Url || '',
     node1Role: instance.node1Role || 'primary',
     node2Role: instance.node2Role || 'backup',
+    node1Path: instance.node1Path || '',
+    node2Path: instance.node2Path || '',
     smpPath: instance.smpPath || '/csp/sys/%25CSP.Portal.Home.zen',
     trakcarePath: instance.trakcarePath || '/csp/system.Home.cls',
   });
@@ -130,7 +134,7 @@ export function EditInstanceModal({ instance, onClose, onSave }: EditInstanceMod
               </h3>
 
               {/* Nodo 1 */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 items-end">
+              <div className="grid grid-cols-1 sm:grid-cols-4 gap-2 items-end">
                 <div className="sm:col-span-2">
                   <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
                     Nodo 1 URL
@@ -140,7 +144,19 @@ export function EditInstanceModal({ instance, onClose, onSave }: EditInstanceMod
                     value={formData.node1Url}
                     onChange={(e) => setFormData({ ...formData, node1Url: e.target.value })}
                     placeholder="https://10.244.20.4"
-                    className="w-full px-3 py-1.5 text-xs bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 text-slate-900 dark:text-slate-100 font-mono"
+                    className="w-full px-2.5 py-1.5 text-xs bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 text-slate-900 dark:text-slate-100 font-mono"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
+                    Path Nodo 1 (opcional)
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.node1Path}
+                    onChange={(e) => setFormData({ ...formData, node1Path: e.target.value })}
+                    placeholder="ej: /csp/sys/%25CSP..."
+                    className="w-full px-2.5 py-1.5 text-xs bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 text-slate-900 dark:text-slate-100 font-mono text-[11px]"
                   />
                 </div>
                 <div>
@@ -150,7 +166,7 @@ export function EditInstanceModal({ instance, onClose, onSave }: EditInstanceMod
                   <select
                     value={formData.node1Role}
                     onChange={(e) => setFormData({ ...formData, node1Role: e.target.value })}
-                    className="w-full px-2.5 py-1.5 text-xs bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-slate-100 font-medium"
+                    className="w-full px-2 py-1.5 text-xs bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-slate-100 font-medium"
                   >
                     <option value="primary">🟢 Primario</option>
                     <option value="backup">⚪ Backup</option>
@@ -159,7 +175,7 @@ export function EditInstanceModal({ instance, onClose, onSave }: EditInstanceMod
               </div>
 
               {/* Nodo 2 */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 items-end">
+              <div className="grid grid-cols-1 sm:grid-cols-4 gap-2 items-end">
                 <div className="sm:col-span-2">
                   <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
                     Nodo 2 URL
@@ -169,7 +185,19 @@ export function EditInstanceModal({ instance, onClose, onSave }: EditInstanceMod
                     value={formData.node2Url}
                     onChange={(e) => setFormData({ ...formData, node2Url: e.target.value })}
                     placeholder="https://10.244.20.5"
-                    className="w-full px-3 py-1.5 text-xs bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 text-slate-900 dark:text-slate-100 font-mono"
+                    className="w-full px-2.5 py-1.5 text-xs bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 text-slate-900 dark:text-slate-100 font-mono"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
+                    Path Nodo 2 (opcional)
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.node2Path}
+                    onChange={(e) => setFormData({ ...formData, node2Path: e.target.value })}
+                    placeholder="ej: /csp/sys/%25CSP..."
+                    className="w-full px-2.5 py-1.5 text-xs bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 text-slate-900 dark:text-slate-100 font-mono text-[11px]"
                   />
                 </div>
                 <div>
@@ -179,7 +207,7 @@ export function EditInstanceModal({ instance, onClose, onSave }: EditInstanceMod
                   <select
                     value={formData.node2Role}
                     onChange={(e) => setFormData({ ...formData, node2Role: e.target.value })}
-                    className="w-full px-2.5 py-1.5 text-xs bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-slate-100 font-medium"
+                    className="w-full px-2 py-1.5 text-xs bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-slate-100 font-medium"
                   >
                     <option value="primary">🟢 Primario</option>
                     <option value="backup">⚪ Backup</option>
@@ -248,7 +276,7 @@ export function EditInstanceModal({ instance, onClose, onSave }: EditInstanceMod
                       <span className="text-slate-500">
                         Nodo 1 ({formData.node1Role === 'backup' ? 'Backup' : 'Primario'}):
                       </span>{' '}
-                      {normalizeToHttps(formData.node1Url) + (instance.layer === 'trakcare' ? formData.trakcarePath : formData.smpPath)}
+                      {normalizeToHttps(formData.node1Url) + (formData.node1Path || (instance.layer === 'trakcare' ? formData.trakcarePath : formData.smpPath))}
                     </div>
                   )}
                   {formData.node2Url && (
@@ -256,7 +284,7 @@ export function EditInstanceModal({ instance, onClose, onSave }: EditInstanceMod
                       <span className="text-slate-500">
                         Nodo 2 ({formData.node2Role === 'primary' ? 'Primario' : 'Backup'}):
                       </span>{' '}
-                      {normalizeToHttps(formData.node2Url) + (instance.layer === 'trakcare' ? formData.trakcarePath : formData.smpPath)}
+                      {normalizeToHttps(formData.node2Url) + (formData.node2Path || (instance.layer === 'trakcare' ? formData.trakcarePath : formData.smpPath))}
                     </div>
                   )}
                 </div>

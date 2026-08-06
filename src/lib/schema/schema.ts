@@ -29,6 +29,8 @@ export const instances = sqliteTable('instances', {
   node2Url: text('node2_url'), // Nodo 2 (ej: https://10.244.20.5)
   node1Role: text('node1_role').default('primary'), // 'primary' | 'backup'
   node2Role: text('node2_role').default('backup'), // 'primary' | 'backup'
+  node1Path: text('node1_path'), // Path opcional específico del Nodo 1 si difiere del VIP
+  node2Path: text('node2_path'), // Path opcional específico del Nodo 2 si difiere del VIP
   
   // Paths de acceso
   smpPath: text('smp_path').default('/csp/sys/%25CSP.Portal.Home.zen'), // Portal IRIS

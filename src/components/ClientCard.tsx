@@ -17,6 +17,8 @@ interface Instance {
   node2Url: string | null;
   node1Role?: string | null;
   node2Role?: string | null;
+  node1Path?: string | null;
+  node2Path?: string | null;
   smpPath: string | null;
   trakcarePath: string | null;
   namespace: string | null;
@@ -522,7 +524,7 @@ export function ClientCard({ client }: ClientCardProps) {
                         <div className="flex gap-2 pt-0.5">
                           {layer.node1Url && (
                             <a
-                              href={layer.node1Url + (layer.smpPath || '')}
+                              href={layer.node1Url + (layer.node1Path || layer.smpPath || '')}
                               target="_blank"
                               rel="noopener noreferrer"
                               className="flex-1 flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 group/link"
@@ -541,7 +543,7 @@ export function ClientCard({ client }: ClientCardProps) {
                           )}
                           {layer.node2Url && (
                             <a
-                              href={layer.node2Url + (layer.smpPath || '')}
+                              href={layer.node2Url + (layer.node2Path || layer.smpPath || '')}
                               target="_blank"
                               rel="noopener noreferrer"
                               className="flex-1 flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 group/link"
@@ -584,7 +586,7 @@ export function ClientCard({ client }: ClientCardProps) {
                         <div className="flex gap-2 pt-0.5">
                           {layer.node1Url && (
                             <a
-                              href={layer.node1Url + (layer.trakcarePath || '')}
+                              href={layer.node1Url + (layer.node1Path || layer.trakcarePath || '')}
                               target="_blank"
                               rel="noopener noreferrer"
                               className="flex-1 flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 group/link"
@@ -603,7 +605,7 @@ export function ClientCard({ client }: ClientCardProps) {
                           )}
                           {layer.node2Url && (
                             <a
-                              href={layer.node2Url + (layer.trakcarePath || '')}
+                              href={layer.node2Url + (layer.node2Path || layer.trakcarePath || '')}
                               target="_blank"
                               rel="noopener noreferrer"
                               className="flex-1 flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 group/link"

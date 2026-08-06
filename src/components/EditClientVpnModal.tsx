@@ -100,6 +100,8 @@ export function EditClientVpnModal({ client, onClose, onSave }: EditClientVpnMod
         node2Url: first?.node2Url || '',
         node1Role: first?.node1Role || 'primary',
         node2Role: first?.node2Role || 'backup',
+        node1Path: first?.node1Path || '',
+        node2Path: first?.node2Path || '',
         smpPath: first?.smpPath || '/csp/sys/%25CSP.Portal.Home.zen',
         trakcarePath: first?.trakcarePath || '/csp/system.Home.cls',
       };
@@ -189,6 +191,8 @@ export function EditClientVpnModal({ client, onClose, onSave }: EditClientVpnMod
             node2Url: data.node2Url,
             node1Role: data.node1Role,
             node2Role: data.node2Role,
+            node1Path: data.node1Path,
+            node2Path: data.node2Path,
             smpPath: data.smpPath,
             trakcarePath: data.trakcarePath,
           }),
@@ -480,7 +484,7 @@ export function EditClientVpnModal({ client, onClose, onSave }: EditClientVpnMod
                     </h4>
 
                     {/* Nodo 1 */}
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 items-end">
+                    <div className="grid grid-cols-1 sm:grid-cols-4 gap-2 items-end">
                       <div className="sm:col-span-2">
                         <label className="block text-[11px] text-slate-500 dark:text-slate-400 mb-1">
                           Nodo 1 URL
@@ -491,6 +495,18 @@ export function EditClientVpnModal({ client, onClose, onSave }: EditClientVpnMod
                           onChange={(e) => handleEnvFieldChange('node1Url', e.target.value)}
                           placeholder="https://10.244.20.4"
                           className="w-full px-2.5 py-1.5 text-xs bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 text-slate-900 dark:text-slate-100 font-mono"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[11px] text-slate-500 dark:text-slate-400 mb-1">
+                          Path (opcional)
+                        </label>
+                        <input
+                          type="text"
+                          value={currentEnvConf.node1Path || ''}
+                          onChange={(e) => handleEnvFieldChange('node1Path', e.target.value)}
+                          placeholder="ej: /csp/sys..."
+                          className="w-full px-2 py-1.5 text-xs bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg font-mono text-[11px]"
                         />
                       </div>
                       <div>
@@ -509,7 +525,7 @@ export function EditClientVpnModal({ client, onClose, onSave }: EditClientVpnMod
                     </div>
 
                     {/* Nodo 2 */}
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 items-end">
+                    <div className="grid grid-cols-1 sm:grid-cols-4 gap-2 items-end">
                       <div className="sm:col-span-2">
                         <label className="block text-[11px] text-slate-500 dark:text-slate-400 mb-1">
                           Nodo 2 URL
@@ -520,6 +536,18 @@ export function EditClientVpnModal({ client, onClose, onSave }: EditClientVpnMod
                           onChange={(e) => handleEnvFieldChange('node2Url', e.target.value)}
                           placeholder="https://10.244.20.5"
                           className="w-full px-2.5 py-1.5 text-xs bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 text-slate-900 dark:text-slate-100 font-mono"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[11px] text-slate-500 dark:text-slate-400 mb-1">
+                          Path (opcional)
+                        </label>
+                        <input
+                          type="text"
+                          value={currentEnvConf.node2Path || ''}
+                          onChange={(e) => handleEnvFieldChange('node2Path', e.target.value)}
+                          placeholder="ej: /csp/sys..."
+                          className="w-full px-2 py-1.5 text-xs bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg font-mono text-[11px]"
                         />
                       </div>
                       <div>
@@ -590,17 +618,17 @@ export function EditClientVpnModal({ client, onClose, onSave }: EditClientVpnMod
                         {currentEnvConf.node1Url && (
                           <div>
                             <span className="text-slate-500">
-                              TrakCare Nodo 1 ({currentEnvConf.node1Role === 'backup' ? 'Backup' : 'Primario'}):
+                              Nodo 1 ({currentEnvConf.node1Role === 'backup' ? 'Backup' : 'Primario'}):
                             </span>{' '}
-                            {currentEnvConf.node1Url + currentEnvConf.trakcarePath}
+                            {currentEnvConf.node1Url + (currentEnvConf.node1Path || currentEnvConf.trakcarePath)}
                           </div>
                         )}
                         {currentEnvConf.node2Url && (
                           <div>
                             <span className="text-slate-500">
-                              TrakCare Nodo 2 ({currentEnvConf.node2Role === 'primary' ? 'Primario' : 'Backup'}):
+                              Nodo 2 ({currentEnvConf.node2Role === 'primary' ? 'Primario' : 'Backup'}):
                             </span>{' '}
-                            {currentEnvConf.node2Url + currentEnvConf.trakcarePath}
+                            {currentEnvConf.node2Url + (currentEnvConf.node2Path || currentEnvConf.trakcarePath)}
                           </div>
                         )}
                       </div>

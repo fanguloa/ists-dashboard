@@ -12,6 +12,8 @@ interface EditEnvironmentModalProps {
     node2Url: string;
     node1Role: string;
     node2Role: string;
+    node1Path?: string;
+    node2Path?: string;
     smpPath: string;
     trakcarePath: string;
   };
@@ -34,6 +36,8 @@ export function EditEnvironmentModal({
     node2Url: initialData.node2Url || '',
     node1Role: initialData.node1Role || 'primary',
     node2Role: initialData.node2Role || 'backup',
+    node1Path: initialData.node1Path || '',
+    node2Path: initialData.node2Path || '',
     smpPath: initialData.smpPath || '/csp/sys/%25CSP.Portal.Home.zen',
     trakcarePath: initialData.trakcarePath || '/csp/system.Home.cls',
   });
@@ -66,6 +70,8 @@ export function EditEnvironmentModal({
           node2Url: formData.node2Url ? normalizeToHttps(formData.node2Url) : '',
           node1Role: formData.node1Role,
           node2Role: formData.node2Role,
+          node1Path: formData.node1Path,
+          node2Path: formData.node2Path,
           smpPath: formData.smpPath,
           trakcarePath: formData.trakcarePath,
         }),
@@ -157,7 +163,7 @@ export function EditEnvironmentModal({
               </h3>
 
               {/* Nodo 1 */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 items-end">
+              <div className="grid grid-cols-1 sm:grid-cols-4 gap-2 items-end">
                 <div className="sm:col-span-2">
                   <label className="block text-[11px] text-slate-500 dark:text-slate-400 mb-1">
                     Nodo 1 URL
@@ -168,6 +174,18 @@ export function EditEnvironmentModal({
                     onChange={(e) => setFormData({ ...formData, node1Url: e.target.value })}
                     placeholder="https://10.244.20.4"
                     className="w-full px-2.5 py-1.5 text-xs bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 text-slate-900 dark:text-slate-100 font-mono"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] text-slate-500 dark:text-slate-400 mb-1">
+                    Path (opcional)
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.node1Path}
+                    onChange={(e) => setFormData({ ...formData, node1Path: e.target.value })}
+                    placeholder="ej: /csp/sys..."
+                    className="w-full px-2 py-1.5 text-xs bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg font-mono text-[11px]"
                   />
                 </div>
                 <div>
@@ -186,7 +204,7 @@ export function EditEnvironmentModal({
               </div>
 
               {/* Nodo 2 */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 items-end">
+              <div className="grid grid-cols-1 sm:grid-cols-4 gap-2 items-end">
                 <div className="sm:col-span-2">
                   <label className="block text-[11px] text-slate-500 dark:text-slate-400 mb-1">
                     Nodo 2 URL
@@ -197,6 +215,18 @@ export function EditEnvironmentModal({
                     onChange={(e) => setFormData({ ...formData, node2Url: e.target.value })}
                     placeholder="https://10.244.20.5"
                     className="w-full px-2.5 py-1.5 text-xs bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 text-slate-900 dark:text-slate-100 font-mono"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] text-slate-500 dark:text-slate-400 mb-1">
+                    Path (opcional)
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.node2Path}
+                    onChange={(e) => setFormData({ ...formData, node2Path: e.target.value })}
+                    placeholder="ej: /csp/sys..."
+                    className="w-full px-2 py-1.5 text-xs bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg font-mono text-[11px]"
                   />
                 </div>
                 <div>
