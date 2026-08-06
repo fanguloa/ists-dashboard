@@ -72,10 +72,10 @@ db.prepare(`
   VALUES (?, 'UAT', 'trakcare', 'UAT-ACHS', 1, 'https://10.244.20.6', 'https://10.244.20.4', 'https://10.244.20.5', 'primary', 'backup', '/csp/sys/%25CSP.Portal.Home.zen', '/csp/system.Home.cls', 'userpass', 'achsuat', 'UAT2026Password!', ?, 1)
 `).run(achs.id, uatTrakCredentials);
 
-// UAT - Integration
+// UAT - Integration (HA)
 db.prepare(`
-  INSERT INTO instances (client_id, environment, layer, namespace, gateway_url, smp_path, trakcare_path, auth_type, username, password, credentials, requires_vpn)
-  VALUES (?, 'UAT', 'integration', 'INT', 'https://10.244.20.6', '/csp/sys/%25CSP.Portal.Home.zen', '/csp/system.Home.cls', 'userpass', 'achsuat', 'UAT2026Password!', ?, 1)
+  INSERT INTO instances (client_id, environment, layer, namespace, has_ha, gateway_url, node1_url, node2_url, node1_role, node2_role, smp_path, trakcare_path, auth_type, username, password, credentials, requires_vpn)
+  VALUES (?, 'UAT', 'integration', 'INT', 1, 'https://10.244.20.6', 'https://10.244.20.4', 'https://10.244.20.5', 'primary', 'backup', '/csp/sys/%25CSP.Portal.Home.zen', '/csp/system.Home.cls', 'userpass', 'achsuat', 'UAT2026Password!', ?, 1)
 `).run(achs.id, uatTrakCredentials);
 
 // LIVE - TrakCare (HA)
@@ -84,10 +84,10 @@ db.prepare(`
   VALUES (?, 'LIVE', 'trakcare', 'LIVE-ACHS', 1, 'https://10.244.30.6', 'https://10.244.30.4', 'https://10.244.30.5', 'primary', 'backup', '/csp/sys/%25CSP.Portal.Home.zen', '/csp/system.Home.cls', 'userpass', 'achsadmin', 'Live2026Secure!', ?, 1)
 `).run(achs.id, liveTrakCredentials);
 
-// LIVE - Integration
+// LIVE - Integration (HA)
 db.prepare(`
-  INSERT INTO instances (client_id, environment, layer, namespace, gateway_url, smp_path, trakcare_path, auth_type, username, password, credentials, requires_vpn)
-  VALUES (?, 'LIVE', 'integration', 'INT', 'https://10.244.30.6', '/csp/sys/%25CSP.Portal.Home.zen', '/csp/system.Home.cls', 'userpass', 'achsadmin', 'Live2026Secure!', ?, 1)
+  INSERT INTO instances (client_id, environment, layer, namespace, has_ha, gateway_url, node1_url, node2_url, node1_role, node2_role, smp_path, trakcare_path, auth_type, username, password, credentials, requires_vpn)
+  VALUES (?, 'LIVE', 'integration', 'INT', 1, 'https://10.244.30.6', 'https://10.244.30.4', 'https://10.244.30.5', 'primary', 'backup', '/csp/sys/%25CSP.Portal.Home.zen', '/csp/system.Home.cls', 'userpass', 'achsadmin', 'Live2026Secure!', ?, 1)
 `).run(achs.id, liveTrakCredentials);
 
 console.log('✓ ACHS configured cleanly with BASE, UAT, LIVE environments!');

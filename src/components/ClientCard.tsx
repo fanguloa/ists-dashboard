@@ -5,6 +5,7 @@ import { EditClientVpnModal } from './EditClientVpnModal';
 import { EditCredentialsModal } from './EditCredentialsModal';
 import { DeleteClientModal } from './DeleteClientModal';
 import { AddEnvironmentModal } from './AddEnvironmentModal';
+import { EditEnvironmentModal } from './EditEnvironmentModal';
 
 const DEFAULT_ENVS = ['BASE', 'UAT', 'LIVE'];
 
@@ -108,6 +109,7 @@ export function ClientCard({ client }: ClientCardProps) {
   const [editingCredentials, setEditingCredentials] = useState<Instance | null>(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showAddEnvModal, setShowAddEnvModal] = useState(false);
+  const [showEditEnvModal, setShowEditEnvModal] = useState(false);
 
   // Asegurar que BASE, UAT y LIVE siempre existan + cualquier ambiente adicional
   const existingEnvs = Array.from(new Set(client.instances.map((inst) => inst.environment)));
@@ -360,6 +362,15 @@ export function ClientCard({ client }: ClientCardProps) {
           >
             <Plus className="w-3.5 h-3.5" />
             Ambiente
+          </button>
+
+          <button
+            onClick={() => setShowEditEnvModal(true)}
+            className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-lg transition-all font-medium ml-auto"
+            title={`Configurar HA, VIP y Nodos del ambiente ${selectedEnv}`}
+          >
+            <Settings className="w-3.5 h-3.5 text-blue-500" />
+            Configurar Ambiente
           </button>
         </div>
       </div>
@@ -704,6 +715,27 @@ export function ClientCard({ client }: ClientCardProps) {
           existingEnvs={availableEnvs}
           onClose={() => setShowAddEnvModal(false)}
           onCreated={() => window.location.reload()}
+        />
+      )}
+
+      {/* Modal de configurar ambiente (HA, VIP, Nodos) */}
+      {showEditEnvModal && (
+        <EditEnvironmentModal
+          clientId={client.id}
+          clientCode={client.code}
+          environment={selectedEnv}
+          initialData={{
+            hasHA: layersInEnv.some((l) => l.hasHA),
+            gatewayUrl: layersInEnv.find((l) => l.gatewayUrl)?.gatewayUrl || '',
+            node1Url: layersInEnv.find((l) => l.node1Url)?.node1Url || '',
+            node2Url: layersInEnv.find((l) => l.node2Url)?.node2Url || '',
+            node1Role: layersInEnv.find((l) => l.node1Role)?.node1Role || 'primary',
+            node2Role: layersInEnv.find((l) => l.node2Role)?.node2Role || 'backup',
+            smpPath: layersInEnv.find((l) => l.smpPath)?.smpPath || '/csp/sys/%25CSP.Portal.Home.zen',
+            trakcarePath: layersInEnv.find((l) => l.trakcarePath)?.trakcarePath || '/csp/system.Home.cls',
+          }}
+          onClose={() => setShowEditEnvModal(false)}
+          onSaved={() => window.location.reload()}
         />
       )}
     </div>
