@@ -72,10 +72,10 @@ db.prepare(`
   VALUES (?, 'UAT', 'trakcare', 'UAT-ACHS', 1, 'https://10.244.20.6', 'https://10.244.20.4', 'https://10.244.20.5', 'primary', 'backup', '/csp/sys/%25CSP.Portal.Home.zen', '/csp/system.Home.cls', 'userpass', 'achsuat', 'UAT2026Password!', ?, 1)
 `).run(achs.id, uatTrakCredentials);
 
-// UAT - Integration (HA)
+// UAT - Integration (HA con VIP prefijado y nodos directos)
 db.prepare(`
-  INSERT INTO instances (client_id, environment, layer, namespace, has_ha, gateway_url, node1_url, node2_url, node1_role, node2_role, smp_path, trakcare_path, auth_type, username, password, credentials, requires_vpn)
-  VALUES (?, 'UAT', 'integration', 'INT', 1, 'https://10.244.20.6', 'https://10.244.20.4', 'https://10.244.20.5', 'primary', 'backup', '/csp/sys/%25CSP.Portal.Home.zen', '/csp/system.Home.cls', 'userpass', 'achsuat', 'UAT2026Password!', ?, 1)
+  INSERT INTO instances (client_id, environment, layer, namespace, has_ha, gateway_url, node1_url, node2_url, node1_role, node2_role, node1_path, node2_path, smp_path, trakcare_path, auth_type, username, password, credentials, requires_vpn)
+  VALUES (?, 'UAT', 'integration', 'INT', 1, 'https://10.244.20.6', 'https://10.244.20.4', 'https://10.244.20.5', 'primary', 'backup', '/csp/sys/%25CSP.Portal.Home.zen', '/csp/sys/%25CSP.Portal.Home.zen', '/clacintuat/csp/sys/%25CSP.Portal.Home.zen', '/csp/system.Home.cls', 'userpass', 'achsuat', 'UAT2026Password!', ?, 1)
 `).run(achs.id, uatTrakCredentials);
 
 // LIVE - TrakCare (HA)
