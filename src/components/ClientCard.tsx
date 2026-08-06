@@ -1,9 +1,12 @@
-import { ExternalLink, Server, Box, Edit3, Globe, Network, Settings, Key, Trash2, GitBranch, Code, Terminal, Copy, FileCheck } from 'lucide-react';
+import { ExternalLink, Server, Box, Edit3, Globe, Network, Settings, Key, Trash2, GitBranch, Code, Terminal, Copy, FileCheck, Plus } from 'lucide-react';
 import { useState } from 'react';
 import { EditInstanceModal } from './EditInstanceModal';
 import { EditClientVpnModal } from './EditClientVpnModal';
 import { EditCredentialsModal } from './EditCredentialsModal';
 import { DeleteClientModal } from './DeleteClientModal';
+import { AddEnvironmentModal } from './AddEnvironmentModal';
+
+const DEFAULT_ENVS = ['BASE', 'UAT', 'LIVE'];
 
 interface Instance {
   id: number;
@@ -102,13 +105,45 @@ export function ClientCard({ client }: ClientCardProps) {
   const [editingVpn, setEditingVpn] = useState(false);
   const [editingCredentials, setEditingCredentials] = useState<Instance | null>(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showAddEnvModal, setShowAddEnvModal] = useState(false);
 
-  // Extraer ambientes únicos
-  const availableEnvs = Array.from(
-    new Set(client.instances.map((inst) => inst.environment))
-  ).sort();
+  // Asegurar que BASE, UAT y LIVE siempre existan + cualquier ambiente adicional
+  const existingEnvs = Array.from(new Set(client.instances.map((inst) => inst.environment)));
+  const allEnvs = Array.from(new Set([...DEFAULT_ENVS, ...existingEnvs]));
 
-  const [selectedEnv, setSelectedEnv] = useState<string>(availableEnvs[0] || '');
+  // Ordenar: BASE, UAT, LIVE primero, luego los adicionales alfabéticamente
+  const availableEnvs = allEnvs.sort((a, b) => {
+    const priorityOrder = ['BASE', 'UAT', 'LIVE'];
+    const indexA = priorityOrder.indexOf(a);
+    const indexB = priorityOrder.indexOf(b);
+    if (indexA !== -1 && indexB !== -1) return indexA - indexB;
+    if (indexA !== -1) return -1;
+    if (indexB !== -1) return 1;
+    return a.localeCompare(b);
+  });
+
+  const [selectedEnv, setSelectedEnv] = useState<string>(availableEnvs[0] || 'BASE');
+
+  const handleCreateLayer = async (env: string, layerType: 'trakcare' | 'integration' | 'smp' = 'trakcare') => {
+    try {
+      const response = await fetch('/api/instances', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          clientId: client.id,
+          environment: env,
+          layer: layerType,
+          namespace: `${env}-${client.code}`,
+        }),
+      });
+
+      if (response.ok) {
+        window.location.reload();
+      }
+    } catch (err) {
+      console.error('Error creando capa:', err);
+    }
+  };
 
   const handleSaveInstance = async (updates: Partial<Instance>) => {
     if (!editingInstance) return;
@@ -301,7 +336,7 @@ export function ClientCard({ client }: ClientCardProps) {
         </div>
 
         {/* Selector de ambiente */}
-        <div className="flex gap-2 flex-wrap">
+        <div className="flex gap-2 flex-wrap items-center">
           {availableEnvs.map((env) => (
             <button
               key={env}
@@ -316,15 +351,45 @@ export function ClientCard({ client }: ClientCardProps) {
               {env}
             </button>
           ))}
+          <button
+            onClick={() => setShowAddEnvModal(true)}
+            className="flex items-center gap-1 px-2.5 py-1.5 text-xs border border-dashed border-slate-300 dark:border-slate-700 text-slate-500 hover:text-slate-900 dark:hover:text-slate-200 hover:border-slate-400 rounded-lg transition-all font-medium"
+            title="Agregar ambiente personalizado"
+          >
+            <Plus className="w-3.5 h-3.5" />
+            Ambiente
+          </button>
         </div>
       </div>
 
       {/* Capas del ambiente seleccionado */}
       <div className="p-4 space-y-3">
         {layersInEnv.length === 0 ? (
-          <p className="text-sm text-slate-500 dark:text-slate-400 text-center py-4">
-            No hay capas en {selectedEnv}
-          </p>
+          <div className="text-center py-6 border border-dashed border-slate-200 dark:border-slate-800 rounded-lg p-4 space-y-2">
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              Ambiente <span className="font-semibold text-slate-700 dark:text-slate-300">{selectedEnv}</span> sin capas configuradas.
+            </p>
+            <div className="flex items-center justify-center gap-2 pt-1">
+              <button
+                onClick={() => handleCreateLayer(selectedEnv, 'trakcare')}
+                className="px-3 py-1.5 text-xs bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium flex items-center gap-1"
+              >
+                <Plus className="w-3.5 h-3.5" /> Capa TrakCare
+              </button>
+              <button
+                onClick={() => handleCreateLayer(selectedEnv, 'integration')}
+                className="px-3 py-1.5 text-xs bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg transition-colors font-medium flex items-center gap-1"
+              >
+                <Plus className="w-3.5 h-3.5" /> Integration
+              </button>
+              <button
+                onClick={() => handleCreateLayer(selectedEnv, 'smp')}
+                className="px-3 py-1.5 text-xs bg-purple-100 dark:bg-purple-950/40 hover:bg-purple-200 text-purple-700 dark:text-purple-300 rounded-lg transition-colors font-medium flex items-center gap-1"
+              >
+                <Plus className="w-3.5 h-3.5" /> SMP
+              </button>
+            </div>
+          </div>
         ) : (
           layersInEnv.map((layer) => {
             const Icon = layerIcons[layer.layer as keyof typeof layerIcons] || Server;
@@ -590,6 +655,17 @@ export function ClientCard({ client }: ClientCardProps) {
           client={client}
           onClose={() => setShowDeleteModal(false)}
           onConfirm={handleDelete}
+        />
+      )}
+
+      {/* Modal de agregar ambiente */}
+      {showAddEnvModal && (
+        <AddEnvironmentModal
+          clientId={client.id}
+          clientCode={client.code}
+          existingEnvs={availableEnvs}
+          onClose={() => setShowAddEnvModal(false)}
+          onCreated={() => window.location.reload()}
         />
       )}
     </div>

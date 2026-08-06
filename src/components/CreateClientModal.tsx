@@ -86,7 +86,7 @@ export function CreateClientModal({ onClose, onCreate }: CreateClientModalProps)
           {/* Info */}
           <div className="bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-900/30 rounded-lg p-4">
             <p className="text-sm text-blue-800 dark:text-blue-300">
-              💡 Después de crear el proyecto podrás agregar ambientes (BASE, UAT, LIVE), configurar VPN y credenciales.
+              💡 El proyecto se creará automáticamente con los ambientes base <strong>BASE</strong>, <strong>UAT</strong> y <strong>LIVE</strong>. Luego podrás crear ambientes adicionales (DEV, TEST, etc.), configurar VPN y credenciales.
             </p>
           </div>
 

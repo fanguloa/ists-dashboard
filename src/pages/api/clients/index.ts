@@ -1,6 +1,6 @@
 import type { APIRoute } from 'astro';
 import { db } from '../../../lib/db/index';
-import { clients } from '../../../lib/schema/schema';
+import { clients, instances } from '../../../lib/schema/schema';
 
 export const POST: APIRoute = async ({ request }) => {
   try {
@@ -17,15 +17,31 @@ export const POST: APIRoute = async ({ request }) => {
       );
     }
 
+    const cleanCode = code.toUpperCase().trim();
+
     const result = await db
       .insert(clients)
       .values({
-        code: code.toUpperCase(),
-        name,
+        code: cleanCode,
+        name: name.trim(),
       })
       .returning();
 
-    return new Response(JSON.stringify(result[0]), {
+    const newClient = result[0];
+
+    // Crear automáticamente los ambientes por defecto: BASE, UAT, LIVE
+    const defaultEnvironments = ['BASE', 'UAT', 'LIVE'];
+    for (const env of defaultEnvironments) {
+      await db.insert(instances).values({
+        clientId: newClient.id,
+        environment: env,
+        layer: 'trakcare',
+        namespace: `${env}-${cleanCode}`,
+        authType: 'userpass',
+      });
+    }
+
+    return new Response(JSON.stringify(newClient), {
       status: 201,
       headers: { 'Content-Type': 'application/json' },
     });
