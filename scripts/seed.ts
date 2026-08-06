@@ -87,19 +87,18 @@ async function seed() {
     if (!clientCode || clientCode.length < 2) continue;
 
     // Detecta el ambiente y si es INT
-    let env = config.description.toUpperCase();
-    const isInt = serverId.toLowerCase().includes('int');
-    
-    // Si es INT pero el env no lo refleja, agrégalo
-    if (isInt && !env.includes('INT')) {
-      env = `${env}-INT`;
-    }
+    let rawEnv = config.description.toUpperCase().trim();
+    const isInt = serverId.toLowerCase().includes('int') || rawEnv.includes('INT');
+
+    // Limpia el sufijo -INT para mapear la capa de integración dentro del ambiente principal (BASE, UAT, LIVE)
+    let env = rawEnv.replace(/-?INT$/i, '').trim();
+    if (!env) env = 'BASE';
 
     if (!clientGroups.has(clientCode)) {
       clientGroups.set(clientCode, []);
     }
 
-    clientGroups.get(clientCode)!.push({ env, config, serverId });
+    clientGroups.get(clientCode)!.push({ env, config, serverId, isInt });
   }
 
   // Inserta clientes e instancias
@@ -122,12 +121,12 @@ async function seed() {
     console.log(`✓ Client: ${client.code} (${client.name})`);
 
     // Inserta instancias
-    for (const { env, config, serverId } of instances_) {
+    for (const { env, config, serverId, isInt } of instances_) {
       const { host, port = 80, pathPrefix = '', scheme = 'http' } = config.webServer;
 
-      // Detecta layer por pathPrefix
+      // Detecta layer por pathPrefix o isInt
       let layer = 'trakcare';
-      if (pathPrefix.toLowerCase().includes('int')) {
+      if (isInt || pathPrefix.toLowerCase().includes('int')) {
         layer = 'integration';
       } else if (serverId.includes('base') && !pathPrefix) {
         layer = 'smp';
