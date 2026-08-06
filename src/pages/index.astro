@@ -1,0 +1,27 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { Dashboard } from '../components/Dashboard';
+import { db } from '../lib/db/index';
+import { clients, instances, quickLinks } from '../lib/schema/schema';
+
+const allClients = await db.select().from(clients).orderBy(clients.code);
+const allInstances = await db.select().from(instances);
+const allQuickLinks = await db.select().from(quickLinks);
+
+const clientMap = new Map(
+  allClients.map((c) => [
+    c.id,
+    {
+      ...c,
+      instances: allInstances.filter((i) => i.clientId === c.id),
+      quickLinks: allQuickLinks.filter((q) => q.clientId === c.id),
+    },
+  ])
+);
+
+const clientsWithInstances = Array.from(clientMap.values());
+---
+
+<Layout title="TrakControl Dashboard">
+  <Dashboard client:load initialClients={clientsWithInstances} />
+</Layout>
