@@ -24,9 +24,11 @@ export const instances = sqliteTable('instances', {
   
   // Alta disponibilidad (2 nodos para UAT, TEST, LIVE)
   hasHA: integer('has_ha', { mode: 'boolean' }).default(false),
-  gatewayUrl: text('gateway_url'), // URL del gateway/balanceador (ej: http://10.244.20.6)
-  node1Url: text('node1_url'), // Nodo 1 (ej: http://10.244.20.4)
-  node2Url: text('node2_url'), // Nodo 2 (ej: http://10.244.20.5)
+  gatewayUrl: text('gateway_url'), // URL del gateway/balanceador (VIP)
+  node1Url: text('node1_url'), // Nodo 1 (ej: https://10.244.20.4)
+  node2Url: text('node2_url'), // Nodo 2 (ej: https://10.244.20.5)
+  node1Role: text('node1_role').default('primary'), // 'primary' | 'backup'
+  node2Role: text('node2_role').default('backup'), // 'primary' | 'backup'
   
   // Paths de acceso
   smpPath: text('smp_path').default('/csp/sys/%25CSP.Portal.Home.zen'), // Portal IRIS

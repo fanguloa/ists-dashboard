@@ -14,6 +14,8 @@ interface Instance {
   gatewayUrl: string | null;
   node1Url: string | null;
   node2Url: string | null;
+  node1Role?: string | null;
+  node2Role?: string | null;
   smpPath: string | null;
   trakcarePath: string | null;
   namespace: string | null;

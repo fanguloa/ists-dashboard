@@ -16,6 +16,8 @@ interface Instance {
   gatewayUrl: string | null;
   node1Url: string | null;
   node2Url: string | null;
+  node1Role?: string | null;
+  node2Role?: string | null;
   smpPath: string | null;
   trakcarePath: string | null;
   namespace: string | null;
@@ -62,9 +64,9 @@ const layerIcons = {
 };
 
 const layerNames = {
-  trakcare: 'TrakCare',
-  integration: 'Integration',
-  smp: 'SMP',
+  trakcare: 'Clínica (TrakCare)',
+  integration: 'Integraciones (INT)',
+  smp: 'Portal SMP',
 };
 
 const vpnIcons = {
@@ -517,22 +519,29 @@ export function ClientCard({ client }: ClientCardProps) {
                           className="flex items-center gap-2 text-xs text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 group/link"
                         >
                           <Box className="w-3 h-3" />
-                          <span className="flex-1 truncate font-medium">SMP Portal</span>
+                          <span className="flex-1 truncate font-medium">SMP Portal (VIP)</span>
                           <ExternalLink className="w-3 h-3 opacity-0 group-hover/link:opacity-100 transition-opacity" />
                         </a>
                       )}
                       {/* Nodos HA en una sola línea */}
                       {(layer.node1Url || layer.node2Url) && (
-                        <div className="flex gap-2">
+                        <div className="flex gap-2 pt-0.5">
                           {layer.node1Url && (
                             <a
                               href={layer.node1Url + (layer.smpPath || '')}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="flex-1 flex items-center gap-2 text-xs text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 group/link"
+                              className="flex-1 flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 group/link"
                             >
-                              <Server className="w-3 h-3" />
+                              <Server className="w-3 h-3 text-slate-400" />
                               <span className="truncate">Nodo 1</span>
+                              <span className={`text-[9px] px-1 py-0.2 rounded font-medium ${
+                                layer.node1Role === 'backup'
+                                  ? 'bg-slate-100 dark:bg-slate-800 text-slate-500'
+                                  : 'bg-emerald-100 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 font-semibold'
+                              }`}>
+                                {layer.node1Role === 'backup' ? '⚪ Backup' : '🟢 Primario'}
+                              </span>
                               <ExternalLink className="w-3 h-3 opacity-0 group-hover/link:opacity-100 transition-opacity" />
                             </a>
                           )}
@@ -541,10 +550,17 @@ export function ClientCard({ client }: ClientCardProps) {
                               href={layer.node2Url + (layer.smpPath || '')}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="flex-1 flex items-center gap-2 text-xs text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 group/link"
+                              className="flex-1 flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 group/link"
                             >
-                              <Server className="w-3 h-3" />
+                              <Server className="w-3 h-3 text-slate-400" />
                               <span className="truncate">Nodo 2</span>
+                              <span className={`text-[9px] px-1 py-0.2 rounded font-medium ${
+                                layer.node2Role === 'primary'
+                                  ? 'bg-emerald-100 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 font-semibold'
+                                  : 'bg-slate-100 dark:bg-slate-800 text-slate-500'
+                              }`}>
+                                {layer.node2Role === 'primary' ? '🟢 Primario' : '⚪ Backup'}
+                              </span>
                               <ExternalLink className="w-3 h-3 opacity-0 group-hover/link:opacity-100 transition-opacity" />
                             </a>
                           )}
@@ -563,22 +579,29 @@ export function ClientCard({ client }: ClientCardProps) {
                           className="flex items-center gap-2 text-xs text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 group/link"
                         >
                           <Globe className="w-3 h-3" />
-                          <span className="flex-1 truncate font-medium">TrakCare</span>
+                          <span className="flex-1 truncate font-medium">TrakCare UI (VIP)</span>
                           <ExternalLink className="w-3 h-3 opacity-0 group-hover/link:opacity-100 transition-opacity" />
                         </a>
                       )}
                       {/* Nodos HA en una sola línea */}
                       {(layer.node1Url || layer.node2Url) && (
-                        <div className="flex gap-2">
+                        <div className="flex gap-2 pt-0.5">
                           {layer.node1Url && (
                             <a
                               href={layer.node1Url + (layer.trakcarePath || '')}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="flex-1 flex items-center gap-2 text-xs text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 group/link"
+                              className="flex-1 flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 group/link"
                             >
-                              <Server className="w-3 h-3" />
+                              <Server className="w-3 h-3 text-slate-400" />
                               <span className="truncate">Nodo 1</span>
+                              <span className={`text-[9px] px-1 py-0.2 rounded font-medium ${
+                                layer.node1Role === 'backup'
+                                  ? 'bg-slate-100 dark:bg-slate-800 text-slate-500'
+                                  : 'bg-emerald-100 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 font-semibold'
+                              }`}>
+                                {layer.node1Role === 'backup' ? '⚪ Backup' : '🟢 Primario'}
+                              </span>
                               <ExternalLink className="w-3 h-3 opacity-0 group-hover/link:opacity-100 transition-opacity" />
                             </a>
                           )}
@@ -587,10 +610,17 @@ export function ClientCard({ client }: ClientCardProps) {
                               href={layer.node2Url + (layer.trakcarePath || '')}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="flex-1 flex items-center gap-2 text-xs text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 group/link"
+                              className="flex-1 flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 group/link"
                             >
-                              <Server className="w-3 h-3" />
+                              <Server className="w-3 h-3 text-slate-400" />
                               <span className="truncate">Nodo 2</span>
+                              <span className={`text-[9px] px-1 py-0.2 rounded font-medium ${
+                                layer.node2Role === 'primary'
+                                  ? 'bg-emerald-100 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 font-semibold'
+                                  : 'bg-slate-100 dark:bg-slate-800 text-slate-500'
+                              }`}>
+                                {layer.node2Role === 'primary' ? '🟢 Primario' : '⚪ Backup'}
+                              </span>
                               <ExternalLink className="w-3 h-3 opacity-0 group-hover/link:opacity-100 transition-opacity" />
                             </a>
                           )}

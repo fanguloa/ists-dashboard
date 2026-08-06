@@ -14,6 +14,8 @@ export const POST: APIRoute = async ({ request }) => {
       gatewayUrl,
       node1Url,
       node2Url,
+      node1Role = 'primary',
+      node2Role = 'backup',
       smpPath = '/csp/sys/%25CSP.Portal.Home.zen',
       trakcarePath = '/csp/system.Home.cls',
       authType = 'userpass',
@@ -22,6 +24,7 @@ export const POST: APIRoute = async ({ request }) => {
       credentials,
       ssoProvider,
       ssoUrl,
+      createBothLayers = true,
     } = body;
 
     if (!clientId || !environment) {
@@ -48,7 +51,10 @@ export const POST: APIRoute = async ({ request }) => {
 
     const cleanEnv = environment.toUpperCase().trim();
 
-    const result = await db
+    const createdInstances = [];
+
+    // Capa principal
+    const result1 = await db
       .insert(instances)
       .values({
         clientId: Number(clientId),
@@ -59,6 +65,8 @@ export const POST: APIRoute = async ({ request }) => {
         gatewayUrl: gatewayUrl || null,
         node1Url: node1Url || null,
         node2Url: node2Url || null,
+        node1Role: node1Role || 'primary',
+        node2Role: node2Role || 'backup',
         smpPath,
         trakcarePath,
         authType,
@@ -70,7 +78,39 @@ export const POST: APIRoute = async ({ request }) => {
       })
       .returning();
 
-    return new Response(JSON.stringify(result[0]), {
+    createdInstances.push(result1[0]);
+
+    // Si createBothLayers es verdadero y solo creamos 1 capa, crear automáticamente la capa opuesta (Clínica o Integraciones)
+    if (createBothLayers) {
+      const otherLayer = layer.toLowerCase().trim() === 'trakcare' ? 'integration' : 'trakcare';
+      const otherNamespace = otherLayer === 'integration' ? 'INT' : `${cleanEnv}`;
+
+      const result2 = await db
+        .insert(instances)
+        .values({
+          clientId: Number(clientId),
+          environment: cleanEnv,
+          layer: otherLayer,
+          namespace: otherNamespace,
+          hasHA: Boolean(hasHA),
+          gatewayUrl: gatewayUrl || null,
+          node1Url: node1Url || null,
+          node2Url: node2Url || null,
+          node1Role: node1Role || 'primary',
+          node2Role: node2Role || 'backup',
+          smpPath,
+          trakcarePath,
+          authType,
+          username: primaryUsername,
+          password: primaryPassword,
+          credentials: credentialsJson,
+        })
+        .returning();
+
+      createdInstances.push(result2[0]);
+    }
+
+    return new Response(JSON.stringify(createdInstances), {
       status: 201,
       headers: { 'Content-Type': 'application/json' },
     });

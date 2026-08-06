@@ -14,7 +14,7 @@ export const PUT: APIRoute = async ({ params, request }) => {
     }
 
     const body = await request.json();
-    const { hasHA, gatewayUrl, node1Url, node2Url, smpPath, trakcarePath, authType, username, password, credentials, ssoProvider, ssoUrl } = body;
+    const { hasHA, gatewayUrl, node1Url, node2Url, node1Role, node2Role, smpPath, trakcarePath, authType, username, password, credentials, ssoProvider, ssoUrl } = body;
 
     let credentialsJson: string | null = null;
     let primaryUsername = username || null;
@@ -40,6 +40,8 @@ export const PUT: APIRoute = async ({ params, request }) => {
         gatewayUrl: gatewayUrl || null,
         node1Url: node1Url || null,
         node2Url: node2Url || null,
+        node1Role: node1Role || 'primary',
+        node2Role: node2Role || 'backup',
         smpPath: smpPath || '/csp/sys/%25CSP.Portal.Home.zen',
         trakcarePath: trakcarePath || '/csp/system.Home.cls',
         authType: authType || 'userpass',

@@ -30,13 +30,24 @@ export const POST: APIRoute = async ({ request }) => {
     const newClient = result[0];
 
     // Crear automáticamente los ambientes por defecto: BASE, UAT, LIVE
+    // Cada ambiente tiene 2 capas fijas: Clínica (trakcare) e Integraciones (integration)
     const defaultEnvironments = ['BASE', 'UAT', 'LIVE'];
     for (const env of defaultEnvironments) {
+      // 1. Capa Clínica (TrakCare)
       await db.insert(instances).values({
         clientId: newClient.id,
         environment: env,
         layer: 'trakcare',
         namespace: `${env}-${cleanCode}`,
+        authType: 'userpass',
+      });
+
+      // 2. Capa Integraciones (INT)
+      await db.insert(instances).values({
+        clientId: newClient.id,
+        environment: env,
+        layer: 'integration',
+        namespace: 'INT',
         authType: 'userpass',
       });
     }

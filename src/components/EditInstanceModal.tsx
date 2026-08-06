@@ -4,10 +4,13 @@ import { useState } from 'react';
 interface Instance {
   id: number;
   environment: string;
+  layer: string;
   hasHA: boolean;
   gatewayUrl: string | null;
   node1Url: string | null;
   node2Url: string | null;
+  node1Role?: string | null;
+  node2Role?: string | null;
   smpPath: string | null;
   trakcarePath: string | null;
   namespace: string | null;
@@ -25,6 +28,8 @@ export function EditInstanceModal({ instance, onClose, onSave }: EditInstanceMod
     gatewayUrl: instance.gatewayUrl || '',
     node1Url: instance.node1Url || '',
     node2Url: instance.node2Url || '',
+    node1Role: instance.node1Role || 'primary',
+    node2Role: instance.node2Role || 'backup',
     smpPath: instance.smpPath || '/csp/sys/%25CSP.Portal.Home.zen',
     trakcarePath: instance.trakcarePath || '/csp/system.Home.cls',
   });
@@ -119,41 +124,77 @@ export function EditInstanceModal({ instance, onClose, onSave }: EditInstanceMod
 
           {/* Nodos (solo si HA está activo) */}
           {formData.hasHA && (
-            <>
-              <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                  Nodo 1 <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="url"
-                  value={formData.node1Url}
-                  onChange={(e) => setFormData({ ...formData, node1Url: e.target.value })}
-                  placeholder="https://10.244.20.4"
-                  className="w-full px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-100 text-slate-900 dark:text-slate-100 font-mono text-sm"
-                />
+            <div className="space-y-4 p-3.5 bg-slate-50 dark:bg-slate-800/40 rounded-xl border border-slate-200 dark:border-slate-700">
+              <h3 className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                Configuración de Nodos HA
+              </h3>
+
+              {/* Nodo 1 */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 items-end">
+                <div className="sm:col-span-2">
+                  <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
+                    Nodo 1 URL
+                  </label>
+                  <input
+                    type="url"
+                    value={formData.node1Url}
+                    onChange={(e) => setFormData({ ...formData, node1Url: e.target.value })}
+                    placeholder="https://10.244.20.4"
+                    className="w-full px-3 py-1.5 text-xs bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 text-slate-900 dark:text-slate-100 font-mono"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
+                    Estado Nodo 1
+                  </label>
+                  <select
+                    value={formData.node1Role}
+                    onChange={(e) => setFormData({ ...formData, node1Role: e.target.value })}
+                    className="w-full px-2.5 py-1.5 text-xs bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-slate-100 font-medium"
+                  >
+                    <option value="primary">🟢 Primario</option>
+                    <option value="backup">⚪ Backup</option>
+                  </select>
+                </div>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                  Nodo 2 <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="url"
-                  value={formData.node2Url}
-                  onChange={(e) => setFormData({ ...formData, node2Url: e.target.value })}
-                  placeholder="https://10.244.20.5"
-                  className="w-full px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-100 text-slate-900 dark:text-slate-100 font-mono text-sm"
-                />
+              {/* Nodo 2 */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 items-end">
+                <div className="sm:col-span-2">
+                  <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
+                    Nodo 2 URL
+                  </label>
+                  <input
+                    type="url"
+                    value={formData.node2Url}
+                    onChange={(e) => setFormData({ ...formData, node2Url: e.target.value })}
+                    placeholder="https://10.244.20.5"
+                    className="w-full px-3 py-1.5 text-xs bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 text-slate-900 dark:text-slate-100 font-mono"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
+                    Estado Nodo 2
+                  </label>
+                  <select
+                    value={formData.node2Role}
+                    onChange={(e) => setFormData({ ...formData, node2Role: e.target.value })}
+                    className="w-full px-2.5 py-1.5 text-xs bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-slate-100 font-medium"
+                  >
+                    <option value="primary">🟢 Primario</option>
+                    <option value="backup">⚪ Backup</option>
+                  </select>
+                </div>
               </div>
-            </>
+            </div>
           )}
 
           <hr className="border-slate-200 dark:border-slate-800" />
 
           {/* Paths de acceso */}
           <div>
-            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-              Path SMP (Portal IRIS)
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
+              Path SMP (Portal Management IRIS)
             </label>
             <input
               type="text"
@@ -162,24 +203,26 @@ export function EditInstanceModal({ instance, onClose, onSave }: EditInstanceMod
               className="w-full px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-100 text-slate-900 dark:text-slate-100 font-mono text-sm"
             />
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-              Portal de gestión de IRIS
+              Portal de administración del motor InterSystems IRIS
             </p>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-              Path TrakCare (Aplicación)
-            </label>
-            <input
-              type="text"
-              value={formData.trakcarePath}
-              onChange={(e) => setFormData({ ...formData, trakcarePath: e.target.value })}
-              className="w-full px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-100 text-slate-900 dark:text-slate-100 font-mono text-sm"
-            />
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-              Aplicación de registro clínico
-            </p>
-          </div>
+          {instance.layer === 'trakcare' && (
+            <div>
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
+                Path TrakCare (UI Clínica)
+              </label>
+              <input
+                type="text"
+                value={formData.trakcarePath}
+                onChange={(e) => setFormData({ ...formData, trakcarePath: e.target.value })}
+                className="w-full px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-100 text-slate-900 dark:text-slate-100 font-mono text-sm"
+              />
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                Interfaz web de la aplicación clínica TrakCare
+              </p>
+            </div>
+          )}
 
           {/* Preview */}
           {formData.gatewayUrl && (
