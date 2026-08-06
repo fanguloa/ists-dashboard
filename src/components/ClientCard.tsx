@@ -251,98 +251,103 @@ export function ClientCard({ client }: ClientCardProps) {
 
   return (
     <div className="group relative bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 transition-all duration-200">
-      {/* Header del cliente */}
-      <div className="p-4 sm:p-5 border-b border-slate-200/50 dark:border-slate-800/50">
-        <div className="flex flex-wrap items-start justify-between gap-2 mb-3 sm:mb-4">
-          <div className="flex-1 min-w-[140px]">
-            <h3 className="text-base sm:text-lg font-medium text-slate-900 dark:text-slate-100">
+      {/* Header del cliente - Estructura Jerárquica & Limpia */}
+      <div className="p-4 sm:p-5 border-b border-slate-200/50 dark:border-slate-800/50 space-y-3">
+        {/* Fila 1: Título del Proyecto + Badge de VPN */}
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <h3 className="text-base sm:text-lg font-bold tracking-tight text-slate-900 dark:text-slate-100">
               {client.code}
             </h3>
-            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-0.5">
+            <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
               {client.name}
             </p>
           </div>
-          <div className="flex items-center gap-1 sm:gap-2 flex-wrap">
-            {/* Links externos */}
-            <div className="flex items-center gap-0.5 sm:gap-1">
-              {client.ccrUrl ? (
-                <a
-                  href={client.ccrUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-2 text-emerald-600 dark:text-emerald-400 hover:text-emerald-500 transition-colors"
-                  title="Abrir CCR (Control de Cambios)"
-                >
-                  <FileCheck className="w-4 h-4" />
-                </a>
-              ) : client.gitRepo ? (
-                <a
-                  href={client.gitRepo}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-2 text-slate-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
-                  title="Abrir repositorio Git"
-                >
-                  <GitBranch className="w-4 h-4" />
-                </a>
-              ) : null}
-              {client.folderPath && (
-                <>
-                  <button
-                    onClick={handleCopyPath}
-                    className="p-2 text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-                    title="Copiar ruta"
-                  >
-                    <Copy className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={handleOpenTerminal}
-                    className="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors"
-                    title="Abrir terminal"
-                  >
-                    <Terminal className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={handleOpenVSCode}
-                    className="p-2 text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-                    title="Abrir en VSCode"
-                  >
-                    <Code className="w-4 h-4" />
-                  </button>
-                </>
-              )}
-            </div>
 
-            {/* Configuración y VPN */}
+          {/* Badge VPN (Top Right) */}
+          {client.vpnType && (
             <button
               onClick={() => setEditingVpn(true)}
-              className="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors"
-              title="Configurar proyecto"
+              className="flex flex-col items-end px-2.5 py-1 bg-amber-50/80 dark:bg-amber-950/30 border border-amber-200/60 dark:border-amber-900/40 rounded-lg hover:border-amber-300 dark:hover:border-amber-800 transition-colors text-right group/vpn cursor-pointer"
+              title="Configuración de VPN (Clic para editar)"
+            >
+              <div className="text-[11px] font-semibold text-amber-700 dark:text-amber-400 group-hover/vpn:text-amber-800 transition-colors flex items-center gap-1">
+                {vpnIcons[client.vpnType as keyof typeof vpnIcons] || client.vpnType}
+              </div>
+              {client.vpnHost && (
+                <div className="text-[10px] font-mono text-amber-600/90 dark:text-amber-500/90">
+                  {client.vpnHost}
+                </div>
+              )}
+            </button>
+          )}
+        </div>
+
+        {/* Fila 2: Barra de Accesos Rápidos y Configuración */}
+        <div className="flex items-center justify-between gap-2 pt-1 border-t border-slate-100 dark:border-slate-800/40">
+          {/* Herramientas Locales / Links */}
+          <div className="flex items-center gap-1">
+            {client.ccrUrl ? (
+              <a
+                href={client.ccrUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-1.5 text-slate-400 hover:text-emerald-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-md transition-colors"
+                title="Abrir CCR (Control de Cambios)"
+              >
+                <FileCheck className="w-4 h-4 text-emerald-500" />
+              </a>
+            ) : client.gitRepo ? (
+              <a
+                href={client.gitRepo}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-1.5 text-slate-400 hover:text-purple-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-md transition-colors"
+                title="Abrir repositorio Git"
+              >
+                <GitBranch className="w-4 h-4" />
+              </a>
+            ) : null}
+
+            {client.folderPath && (
+              <>
+                <button
+                  onClick={handleCopyPath}
+                  className="p-1.5 text-slate-400 hover:text-blue-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-md transition-colors"
+                  title="Copiar ruta local"
+                >
+                  <Copy className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={handleOpenTerminal}
+                  className="p-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-md transition-colors"
+                  title="Abrir terminal"
+                >
+                  <Terminal className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={handleOpenVSCode}
+                  className="p-1.5 text-slate-400 hover:text-blue-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-md transition-colors"
+                  title="Abrir en VSCode"
+                >
+                  <Code className="w-4 h-4" />
+                </button>
+              </>
+            )}
+          </div>
+
+          {/* Acciones de Ajustes y Eliminación */}
+          <div className="flex items-center gap-1">
+            <button
+              onClick={() => setEditingVpn(true)}
+              className="p-1.5 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-md transition-colors"
+              title="Configurar proyecto (VPN, CCR, Ambientes, HA)"
             >
               <Settings className="w-4 h-4" />
             </button>
-            {/* VPN */}
-            {client.vpnType && (
-              <button
-                onClick={() => setEditingVpn(true)}
-                className="flex flex-col items-end gap-1 group/vpn cursor-pointer"
-                title="Editar VPN"
-              >
-                <div className="text-xs font-medium text-amber-600 dark:text-amber-500 group-hover/vpn:text-amber-700 dark:group-hover/vpn:text-amber-400 transition-colors">
-                  {vpnIcons[client.vpnType as keyof typeof vpnIcons] || client.vpnType}
-                </div>
-                {client.vpnHost && (
-                  <div className="text-xs font-mono text-slate-500 dark:text-slate-400">
-                    {client.vpnHost}
-                  </div>
-                )}
-              </button>
-            )}
-
-            {/* Eliminar */}
             <button
               onClick={() => setShowDeleteModal(true)}
-              className="p-2 text-slate-400 hover:text-red-600 dark:hover:text-red-400 transition-colors"
+              className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-md transition-colors"
               title="Eliminar proyecto"
             >
               <Trash2 className="w-4 h-4" />
@@ -350,19 +355,19 @@ export function ClientCard({ client }: ClientCardProps) {
           </div>
         </div>
 
-        {/* Selector de ambiente */}
-        <div className="flex gap-2 flex-wrap items-center">
+        {/* Fila 3: Selector de ambientes */}
+        <div className="flex gap-1.5 flex-wrap items-center pt-1">
           {availableEnvs.map((env) => (
             <button
               key={env}
               onClick={() => setSelectedEnv(env)}
-              className={`flex items-center gap-2 px-3 py-1.5 text-sm rounded-lg transition-all ${
+              className={`flex items-center gap-1.5 px-3 py-1 text-xs rounded-lg transition-all ${
                 selectedEnv === env
-                  ? 'bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 font-medium'
+                  ? 'bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 font-semibold shadow-sm'
                   : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
               }`}
             >
-              <div className={`w-2 h-2 rounded-full ${getEnvColor(env)}`} />
+              <div className={`w-1.5 h-1.5 rounded-full ${getEnvColor(env)}`} />
               {env}
             </button>
           ))}
