@@ -85,57 +85,54 @@ export function Dashboard({ initialClients }: DashboardProps) {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-slate-50 to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
-      {/* Header minimalista */}
+      {/* Header minimalista y responsive */}
       <header className="border-b border-slate-200/50 dark:border-slate-800/50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm sticky top-0 z-40">
-        <div className="container mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-6">
-              <h1 className="text-2xl font-light tracking-tight text-slate-900 dark:text-slate-100">
+        <div className="container mx-auto px-4 sm:px-6 py-3 sm:py-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="flex items-center justify-between sm:justify-start gap-4 sm:gap-6">
+              <h1 className="text-xl sm:text-2xl font-light tracking-tight text-slate-900 dark:text-slate-100">
                 TrakControl
               </h1>
-              <div className="hidden md:flex items-center gap-4 text-sm text-slate-600 dark:text-slate-400">
-                <span className="flex items-center gap-2">
+              <div className="flex items-center gap-3 sm:gap-4 text-xs sm:text-sm text-slate-600 dark:text-slate-400">
+                <span className="flex items-center gap-1.5">
                   <div className="w-1.5 h-1.5 rounded-full bg-slate-400" />
                   {clients.length} clientes
                 </span>
-                <span className="flex items-center gap-2">
+                <span className="flex items-center gap-1.5">
                   <div className="w-1.5 h-1.5 rounded-full bg-slate-400" />
                   {totalInstances} instancias
                 </span>
               </div>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-3 self-end sm:self-auto">
               <ThemeToggle />
               <button
                 onClick={() => setShowCreateModal(true)}
-                className="flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors text-sm font-medium"
+                className="flex items-center gap-1.5 px-3 sm:px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors text-xs sm:text-sm font-medium"
               >
                 <Plus className="w-4 h-4" />
-                Nuevo proyecto
-              </button>
-              <button className="p-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors">
-                <Settings className="w-5 h-5" />
+                <span>Nuevo proyecto</span>
               </button>
             </div>
           </div>
 
-          {/* Solo barra de búsqueda */}
-          <div className="mt-4 max-w-md">
+          {/* Barra de búsqueda */}
+          <div className="mt-3 sm:mt-4 max-w-md w-full">
             <SearchBar value={searchQuery} onChange={setSearchQuery} />
           </div>
         </div>
       </header>
 
       {/* Grid de clientes */}
-      <main className="container mx-auto px-6 py-8">
+      <main className="container mx-auto px-4 sm:px-6 py-6 sm:py-8">
         {filteredClients.length === 0 ? (
-          <div className="text-center py-20">
-            <p className="text-slate-500 dark:text-slate-400 text-lg">
+          <div className="text-center py-16 sm:py-20">
+            <p className="text-slate-500 dark:text-slate-400 text-base sm:text-lg">
               No se encontraron resultados
             </p>
           </div>
         ) : (
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
             {filteredClients.map((client) => (
               <ClientCard key={client.id} client={client} />
             ))}

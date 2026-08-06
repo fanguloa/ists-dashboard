@@ -237,19 +237,19 @@ export function ClientCard({ client }: ClientCardProps) {
   return (
     <div className="group relative bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 transition-all duration-200">
       {/* Header del cliente */}
-      <div className="p-5 border-b border-slate-200/50 dark:border-slate-800/50">
-        <div className="flex items-start justify-between mb-4">
-          <div className="flex-1">
-            <h3 className="text-lg font-medium text-slate-900 dark:text-slate-100">
+      <div className="p-4 sm:p-5 border-b border-slate-200/50 dark:border-slate-800/50">
+        <div className="flex flex-wrap items-start justify-between gap-2 mb-3 sm:mb-4">
+          <div className="flex-1 min-w-[140px]">
+            <h3 className="text-base sm:text-lg font-medium text-slate-900 dark:text-slate-100">
               {client.code}
             </h3>
-            <p className="text-sm text-slate-600 dark:text-slate-400 mt-0.5">
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-0.5">
               {client.name}
             </p>
           </div>
-          <div className="flex items-start gap-2">
+          <div className="flex items-center gap-1 sm:gap-2 flex-wrap">
             {/* Links externos */}
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-0.5 sm:gap-1">
               {client.ccrUrl ? (
                 <a
                   href={client.ccrUrl}
