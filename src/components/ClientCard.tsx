@@ -464,7 +464,7 @@ export function ClientCard({ client }: ClientCardProps) {
                 {/* Accesos - TrakCare o SMP según la capa */}
                 <div className="space-y-1.5">
                   {layer.layer === 'smp' ? (
-                    /* Solo SMP para capa SMP */
+                    /* Solo SMP para capa smp */
                     <>
                       {layer.gatewayUrl && (
                         <a
@@ -474,7 +474,9 @@ export function ClientCard({ client }: ClientCardProps) {
                           className="flex items-center gap-2 text-xs text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 group/link"
                         >
                           <Box className="w-3 h-3" />
-                          <span className="flex-1 truncate font-medium">SMP Portal</span>
+                          <span className="flex-1 truncate font-medium">
+                            {layer.hasHA ? 'SMP Portal (VIP)' : 'SMP Portal'}
+                          </span>
                           <ExternalLink className="w-3 h-3 opacity-0 group-hover/link:opacity-100 transition-opacity" />
                         </a>
                       )}
@@ -519,7 +521,9 @@ export function ClientCard({ client }: ClientCardProps) {
                           className="flex items-center gap-2 text-xs text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 group/link"
                         >
                           <Box className="w-3 h-3" />
-                          <span className="flex-1 truncate font-medium">SMP Portal (VIP)</span>
+                          <span className="flex-1 truncate font-medium">
+                            {layer.hasHA ? 'SMP Portal (VIP)' : 'SMP Portal'}
+                          </span>
                           <ExternalLink className="w-3 h-3 opacity-0 group-hover/link:opacity-100 transition-opacity" />
                         </a>
                       )}
@@ -579,7 +583,9 @@ export function ClientCard({ client }: ClientCardProps) {
                           className="flex items-center gap-2 text-xs text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 group/link"
                         >
                           <Globe className="w-3 h-3" />
-                          <span className="flex-1 truncate font-medium">TrakCare UI (VIP)</span>
+                          <span className="flex-1 truncate font-medium">
+                            {layer.hasHA ? 'TrakCare UI (VIP)' : 'TrakCare UI'}
+                          </span>
                           <ExternalLink className="w-3 h-3 opacity-0 group-hover/link:opacity-100 transition-opacity" />
                         </a>
                       )}
@@ -639,7 +645,9 @@ export function ClientCard({ client }: ClientCardProps) {
                           className="flex items-center gap-2 text-xs text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 group/link"
                         >
                           <Box className="w-3 h-3" />
-                          <span className="flex-1 truncate">SMP Portal</span>
+                          <span className="flex-1 truncate">
+                            {layer.hasHA ? 'SMP Portal (VIP)' : 'SMP Portal'}
+                          </span>
                           <ExternalLink className="w-3 h-3 opacity-0 group-hover/link:opacity-100 transition-opacity" />
                         </a>
                       )}
