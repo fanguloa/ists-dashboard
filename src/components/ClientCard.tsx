@@ -103,6 +103,19 @@ function getAccounts(layer: Instance): Array<{ id: string; label: string; type: 
   return [];
 }
 
+function formatSmpUrl(baseUrl: string | null, path: string | null): string {
+  if (!baseUrl) return '';
+  const cleanBase = baseUrl.replace(/\/+$/, '');
+  const rawPath = (path || '/csp/sys/%25CSP.Portal.Home.zen').trim();
+  
+  if (rawPath.includes('/csp/sys/%25CSP.Portal.Home.zen')) {
+    return cleanBase + (rawPath.startsWith('/') ? rawPath : '/' + rawPath);
+  }
+  
+  const cleanPrefix = rawPath.replace(/\/csp\/sys.*$/, '').replace(/\/+$/, '');
+  return cleanBase + (cleanPrefix ? (cleanPrefix.startsWith('/') ? cleanPrefix : '/' + cleanPrefix) : '') + '/csp/sys/%25CSP.Portal.Home.zen';
+}
+
 export function ClientCard({ client }: ClientCardProps) {
   const [editingInstance, setEditingInstance] = useState<Instance | null>(null);
   const [editingVpn, setEditingVpn] = useState(false);
@@ -460,7 +473,7 @@ export function ClientCard({ client }: ClientCardProps) {
                     <>
                       {layer.gatewayUrl && (
                         <a
-                          href={layer.gatewayUrl + (layer.smpPath || '')}
+                          href={formatSmpUrl(layer.gatewayUrl, layer.smpPath)}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="flex items-center gap-2 text-xs text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 group/link"
@@ -477,7 +490,7 @@ export function ClientCard({ client }: ClientCardProps) {
                         <div className="flex gap-2">
                           {layer.node1Url && (
                             <a
-                              href={layer.node1Url + (layer.smpPath || '')}
+                              href={formatSmpUrl(layer.node1Url, layer.node1Path || layer.smpPath)}
                               target="_blank"
                               rel="noopener noreferrer"
                               className="flex-1 flex items-center gap-2 text-xs text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 group/link"
@@ -489,7 +502,7 @@ export function ClientCard({ client }: ClientCardProps) {
                           )}
                           {layer.node2Url && (
                             <a
-                              href={layer.node2Url + (layer.smpPath || '')}
+                              href={formatSmpUrl(layer.node2Url, layer.node2Path || layer.smpPath)}
                               target="_blank"
                               rel="noopener noreferrer"
                               className="flex-1 flex items-center gap-2 text-xs text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 group/link"
@@ -507,7 +520,7 @@ export function ClientCard({ client }: ClientCardProps) {
                     <>
                       {layer.gatewayUrl && (
                         <a
-                          href={layer.gatewayUrl + (layer.smpPath || '')}
+                          href={formatSmpUrl(layer.gatewayUrl, layer.smpPath)}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="flex items-center gap-2 text-xs text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 group/link"
@@ -524,7 +537,7 @@ export function ClientCard({ client }: ClientCardProps) {
                         <div className="flex gap-2 pt-0.5">
                           {layer.node1Url && (
                             <a
-                              href={layer.node1Url + (layer.node1Path || layer.smpPath || '')}
+                              href={formatSmpUrl(layer.node1Url, layer.node1Path || layer.smpPath)}
                               target="_blank"
                               rel="noopener noreferrer"
                               className="flex-1 flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 group/link"
@@ -543,7 +556,7 @@ export function ClientCard({ client }: ClientCardProps) {
                           )}
                           {layer.node2Url && (
                             <a
-                              href={layer.node2Url + (layer.node2Path || layer.smpPath || '')}
+                              href={formatSmpUrl(layer.node2Url, layer.node2Path || layer.smpPath)}
                               target="_blank"
                               rel="noopener noreferrer"
                               className="flex-1 flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 group/link"
@@ -631,7 +644,7 @@ export function ClientCard({ client }: ClientCardProps) {
                       {/* SMP */}
                       {layer.gatewayUrl && (
                         <a
-                          href={layer.gatewayUrl + (layer.smpPath || '')}
+                          href={formatSmpUrl(layer.gatewayUrl, layer.smpPath)}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="flex items-center gap-2 text-xs text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 group/link"
