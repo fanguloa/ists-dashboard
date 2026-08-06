@@ -226,26 +226,41 @@ export function EditInstanceModal({ instance, onClose, onSave }: EditInstanceMod
 
           {/* Preview */}
           {formData.gatewayUrl && (
-            <div className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-lg border border-slate-200 dark:border-slate-700">
-              <p className="text-xs font-medium text-slate-700 dark:text-slate-300 mb-2">
-                Vista previa:
+            <div className="bg-slate-50 dark:bg-slate-800/50 p-3.5 rounded-lg border border-slate-200 dark:border-slate-700 text-xs font-mono space-y-1 text-slate-600 dark:text-slate-400">
+              <p className="font-sans font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                Vista previa de accesos:
               </p>
-              <div className="space-y-1 text-xs font-mono text-slate-600 dark:text-slate-400">
+              {instance.layer === 'trakcare' && (
                 <div>
-                  <span className="text-slate-500">TrakCare Gateway:</span>{' '}
+                  <span className="text-slate-500">TrakCare UI (VIP):</span>{' '}
                   {normalizeToHttps(formData.gatewayUrl) + formData.trakcarePath}
                 </div>
-                <div>
-                  <span className="text-slate-500">SMP Gateway:</span>{' '}
-                  {normalizeToHttps(formData.gatewayUrl) + formData.smpPath}
-                </div>
-                {formData.hasHA && formData.node1Url && (
-                  <div className="mt-2">
-                    <span className="text-slate-500">TrakCare Nodo 1:</span>{' '}
-                    {normalizeToHttps(formData.node1Url) + formData.trakcarePath}
-                  </div>
-                )}
+              )}
+              <div>
+                <span className="text-slate-500">SMP Portal (VIP):</span>{' '}
+                {normalizeToHttps(formData.gatewayUrl) + formData.smpPath}
               </div>
+
+              {formData.hasHA && (
+                <div className="pt-2 border-t border-slate-200 dark:border-slate-700/60 space-y-1">
+                  {formData.node1Url && (
+                    <div>
+                      <span className="text-slate-500">
+                        Nodo 1 ({formData.node1Role === 'backup' ? 'Backup' : 'Primario'}):
+                      </span>{' '}
+                      {normalizeToHttps(formData.node1Url) + (instance.layer === 'trakcare' ? formData.trakcarePath : formData.smpPath)}
+                    </div>
+                  )}
+                  {formData.node2Url && (
+                    <div>
+                      <span className="text-slate-500">
+                        Nodo 2 ({formData.node2Role === 'primary' ? 'Primario' : 'Backup'}):
+                      </span>{' '}
+                      {normalizeToHttps(formData.node2Url) + (instance.layer === 'trakcare' ? formData.trakcarePath : formData.smpPath)}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           )}
 

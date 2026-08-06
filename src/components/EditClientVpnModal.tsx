@@ -565,6 +565,48 @@ export function EditClientVpnModal({ client, onClose, onSave }: EditClientVpnMod
                     />
                   </div>
                 </div>
+
+                {/* Vista previa de accesos */}
+                {currentEnvConf.gatewayUrl && (
+                  <div className="bg-slate-50 dark:bg-slate-800/40 p-3 rounded-xl border border-slate-200 dark:border-slate-700/60 text-xs font-mono space-y-1 text-slate-600 dark:text-slate-400">
+                    <p className="font-sans font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                      Vista previa de accesos ({selectedEnv}):
+                    </p>
+                    <div>
+                      <span className="text-slate-500">
+                        {currentEnvConf.hasHA ? 'TrakCare UI (VIP):' : 'TrakCare UI:'}
+                      </span>{' '}
+                      {currentEnvConf.gatewayUrl + currentEnvConf.trakcarePath}
+                    </div>
+                    <div>
+                      <span className="text-slate-500">
+                        {currentEnvConf.hasHA ? 'SMP Portal (VIP):' : 'SMP Portal:'}
+                      </span>{' '}
+                      {currentEnvConf.gatewayUrl + currentEnvConf.smpPath}
+                    </div>
+
+                    {currentEnvConf.hasHA && (
+                      <div className="pt-2 border-t border-slate-200 dark:border-slate-700/60 space-y-1">
+                        {currentEnvConf.node1Url && (
+                          <div>
+                            <span className="text-slate-500">
+                              TrakCare Nodo 1 ({currentEnvConf.node1Role === 'backup' ? 'Backup' : 'Primario'}):
+                            </span>{' '}
+                            {currentEnvConf.node1Url + currentEnvConf.trakcarePath}
+                          </div>
+                        )}
+                        {currentEnvConf.node2Url && (
+                          <div>
+                            <span className="text-slate-500">
+                              TrakCare Nodo 2 ({currentEnvConf.node2Role === 'primary' ? 'Primario' : 'Backup'}):
+                            </span>{' '}
+                            {currentEnvConf.node2Url + currentEnvConf.trakcarePath}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           )}
